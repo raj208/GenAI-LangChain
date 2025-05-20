@@ -1,3 +1,11 @@
 # Environment
 .env
 *.env
+
+env/
+
+#   367  git add .
+#   368  git commit -m 'first commit'
+#   369  git push -u origin main
+#   370  git pull origin main --rebase
+#   371  git push -u origin main
