@@ -1,18 +1,31 @@
-from langchain_huggingface import ChatHuggingFace, HuggingFacePipeline
-import os
+from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+from langchain_huggingface import HuggingFacePipeline
 
-os.environ['HF_HOME'] = 'D:/huggingface_cache'
+# Load from your local path
+model_path = "./tinyllama"
 
-llm = HuggingFacePipeline.from_model_id(
-    model_id='TinyLlama/TinyLlama-1.1B-Chat-v1.0',
-    task='text-generation',
-    pipeline_kwargs=dict(
-        temperature=0.5,
-        max_new_tokens=100
-    )
+# Load model and tokenizer
+tokenizer = AutoTokenizer.from_pretrained(model_path)
+model = AutoModelForCausalLM.from_pretrained(model_path)
+
+# Create text-generation pipeline
+pipe = pipeline(
+    "text-generation",
+    model=model,
+    tokenizer=tokenizer,
+    max_new_tokens=100,
+    # temperature=0,
+    do_sample=True
+    # eos_token_id=tokenizer.eos_token_id
 )
-model = ChatHuggingFace(llm=llm)
 
-result = model.invoke("What is the capital of India")
 
-print(result.content) 
+
+# Wrap in LangChain pipeline wrapper
+llm = HuggingFacePipeline(pipeline=pipe)
+
+# Directly invoke the LLM (you don't need ChatHuggingFace)
+prompt = "[INST] What is the capital of India? [/INST]"
+result = llm.invoke(prompt)
+print(result)
+
