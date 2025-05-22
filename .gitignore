@@ -3,6 +3,7 @@
 *.env
 
 env/
+tinyllama/
 
 #   367  git add .
 #   368  git commit -m 'first commit'
